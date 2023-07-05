@@ -19,6 +19,7 @@ import org.cc.stock.col.STaijiBIASColumns;
 import org.cc.stock.col.STaijiCircleColumns;
 import org.cc.stock.col.SVPColumns;
 import org.cc.stock.col.SWaveColumns;
+import org.cc.stock.model.SMonthModel;
 import org.cc.text.TextUtils;
 
 public class SRegressionTest {
@@ -51,7 +52,7 @@ public class SRegressionTest {
 			//SOutputColumns out = new SOutputColumns(new String[] {"sdate:date","so","sh","sl","sc","vol","k","d","kd:string"});
 			SOutputColumns out = new SOutputColumns(new String[] {"sdate:date","sc","ra55","rb55"});
 			//SOutputColumns out = new SOutputColumns(new String[] {"sdate:date","sc","bsa20","bsh20","bsl20","bsv20"});
-			StringBuilder sb = out.toCSVString(sm);	
+			StringBuilder sb = out.toCSVString(sm.data());	
 			CCData.saveText(new File(App.google+"\\stock\\data\\" + stockId + "-mem.csv"), sb.toString(),"UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -30,11 +30,6 @@ public class TA4JStrategy {
         this.high = new HighPriceIndicator(this.series);
         this.low = new LowPriceIndicator(this.series);
         this.close = new ClosePriceIndicator(this.series);
-        this.total = 0.0;
-        this.pvshareholding = 0.0;
-        this.sharecash = 0.0;
-        this.shareholding = 0;
-        this.term = 0 ;
     }
 
 }

@@ -27,12 +27,12 @@ public class TA4JCSVTest extends TA4JBase {
 		// Create bar series
 		String dp = App.google+"\\mydata\\stock\\twotc";
 		System.out.println("===== dp : "+dp);
-		TA4JModel ta = new TA4JModel(dp,"00888");
+		TA4JModel ta = new TA4JModel(dp,"00751B");
 		// Define technical indicators
 		ClosePriceIndicator closePrice = new ClosePriceIndicator(ta.series());
 		BiasIndicator bias = new BiasIndicator(closePrice,610);
-		TA4JBase.bb("close",closePrice,610);
-		TA4JBase.bb("bias",bias,610);
+		TA4JBase.bb("close",closePrice,55);
+		//TA4JBase.bb("bias",bias,610);
 	}
 
 

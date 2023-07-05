@@ -118,9 +118,12 @@ public class PullOTCByStockId {
 	
 	public static void main(String[] args) throws Exception {
 		String base = "G:\\我的雲端硬碟\\mydata\\stock\\twotc";
-		PullOTCByStockId pull = new PullOTCByStockId(base,"00772B");
-		pull.loadFromUrl();
-		pull.mergeData();
+		String[] items = new String[]{"00888","00928","00772B","00687B","00751B"};
+		for(String stockId:items){
+			PullOTCByStockId pull = new PullOTCByStockId(base,stockId);
+			pull.loadFromUrl();
+			pull.mergeData();
+		}
 	}
 	
 }

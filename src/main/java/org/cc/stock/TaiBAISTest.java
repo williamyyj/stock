@@ -14,6 +14,7 @@ import org.cc.stock.col.SKDColumns;
 import org.cc.stock.col.SMACDColumns;
 import org.cc.stock.col.STaijiBIASColumns;
 import org.cc.stock.col.STaijiCircleColumns;
+import org.cc.stock.model.SMonthModel;
 import org.cc.text.TextUtils;
 
 public class TaiBAISTest {

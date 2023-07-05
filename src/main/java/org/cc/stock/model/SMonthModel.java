@@ -1,4 +1,4 @@
-package org.cc.stock;
+package org.cc.stock.model;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -11,7 +11,6 @@ import org.cc.model.CCProcObject;
 import org.cc.stock.col.FStatBase;
 import org.cc.stock.col.IFNValue;
 import org.cc.stock.col.STaiJiColumns;
-import org.cc.stock.model.StockModel;
 import org.cc.text.TextUtils;
 
 public class SMonthModel extends StockModel {

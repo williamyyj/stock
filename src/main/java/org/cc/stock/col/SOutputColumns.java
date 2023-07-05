@@ -1,14 +1,11 @@
 package org.cc.stock.col;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.cc.json.JSONObject;
 import org.cc.model.CCField;
-import org.cc.stock.model.StockModel;
 import org.cc.text.TextUtils;
 
 public class SOutputColumns {
@@ -34,10 +31,10 @@ public class SOutputColumns {
 	
 	
 
-	public StringBuilder toCSVString(StockModel sm ) {
+	public StringBuilder toCSVString(List<JSONObject> data ) {
 		StringBuilder sb = new StringBuilder();
-		for(int i=0; i<sm.data().size();i++) {
-			JSONObject row = sm.data().get(i);
+		for(int i=0; i<data.size();i++) {
+			JSONObject row = data.get(i);
 			proc_fields(sb,row);
 		}
 		return sb;

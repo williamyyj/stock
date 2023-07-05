@@ -15,6 +15,13 @@ public class StockModel extends SBaseModel{
 		loadFormDB(proc);
 		new SBasicColumns(this);
 	}
+
+	public StockModel(String base,String stockId) {
+		super(stockId);
+		loadFormCSV(base);
+		new SBasicColumns(this);
+	}
+	
 	
 	public  double so(JSONObject row) {
 		return row.optDouble("so");

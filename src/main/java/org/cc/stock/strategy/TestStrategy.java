@@ -38,7 +38,7 @@ public class TestStrategy {
 			//System.out.println(tai.toString(4));
 			
 			SOutputColumns out = new SOutputColumns(new String[] {"sdate:date","sc","l1","l2","l3","l4","l5"});
-			StringBuilder sb = out.toCSVString(sm);
+			StringBuilder sb = out.toCSVString(sm.data());
 			CCData.saveText(new File(App.google+"\\stock\\data\\" + stockId + "-mem.csv"), sb.toString(),"UTF-8");
 			
 		} catch(Exception e) {
