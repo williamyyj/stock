@@ -35,5 +35,5 @@ public class FTWSEFromFile implements BiFunction<CCProcObject, String, JSONObjec
         }
         return null;
     }
-
+    
 }

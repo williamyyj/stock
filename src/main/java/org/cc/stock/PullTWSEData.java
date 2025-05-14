@@ -17,9 +17,9 @@ public class PullTWSEData {
         CCProcObject proc = new CCProcObject(base,false);
         try {
             proc.put("$$", App.$app);
-            proc.params().put("dp1", "20220601");
+            proc.params().put("dp1", "20250101");
             
-            Object ret = CCProcUtils.exec(proc, "stock.FTWSEFromUrl@twse,TWSE");
+            Object ret = CCProcUtils.exec(proc, "stock.FStockFromUrl@twse,TWSE");
         } catch (Exception e) {
             e.printStackTrace();
         } finally{

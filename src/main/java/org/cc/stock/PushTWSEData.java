@@ -15,7 +15,7 @@ public class PushTWSEData {
         String base = System.getProperty("$base", App.base); 
         try(CCProcObject proc = new CCProcObject(base,false);){
             proc.put("$$", App.$app);
-            proc.params().put("dp1", "20230615");
+            proc.params().put("dp1", "20241213");
             //proc.params().put("dp2", "20221230");
            CCProcUtils.exec(proc, "stock.FTWSEPush@twse");
         } catch (Exception e) {

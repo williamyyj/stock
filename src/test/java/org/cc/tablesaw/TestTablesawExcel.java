@@ -33,19 +33,18 @@ public class TestTablesawExcel {
 	@Test
 	public void test_load_csv() throws IOException {
 		String base = "G:\\我的雲端硬碟\\myjob\\resources\\prj\\baphiq_data\\export\\";
-		String fname = "111年申請友善資材補助農友名單.csv";
+		String fname = "20250425-生物農藥.csv";
 	     try {
 	            // 从 CSV 文件中读取数据
-	    	 	String insSql="insert into rpt111ApplyFarmer ( id, no, name) values ('%s',%s,N'%s');\r\n";
+	    	 	String insSql="insert into rpt2ApplyFarmer (id, name) values ('%s',N'%s');\r\n";
 	    	 	StringBuilder sb = new StringBuilder();
 	            Table table = Table.read().csv(base+fname);
 	            for(int i=0;i<table.rowCount();i++) {
-	            	String id = table.getString(i, "身分證號");
-	            	String name = table.getString(i, "班員名稱");
-	            	int no = table.intColumn("編號").getInt(i);
-	            	sb.append(String.format(insSql, id,no,name));
+	            	String id = table.getString(i, "id");
+	            	String name = table.getString(i, "name");
+	            	sb.append(String.format(insSql, id,name));
 	            }
-	            CCData.saveText(new File(base,"111.sql"), sb.toString(), "UTF-8");
+	            CCData.saveText(new File(base,"20250425-生物農藥_rpt2ApplyFarmer.sql"), sb.toString(), "UTF-8");
 	        } catch (Exception ex) {
 	            ex.printStackTrace();
 	        }

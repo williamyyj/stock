@@ -7,8 +7,6 @@ import java.util.Date;
 import org.cc.data.CCData;
 import org.cc.data.CCHttpData;
 import org.cc.text.DateUtil;
-import org.cc.text.TextUtils;
-import org.mvel2.sh.text.TextUtil;
 
 public class PullTESCByStockId extends PullStockBase {
 	

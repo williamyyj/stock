@@ -7,7 +7,11 @@ import org.cc.App;
 import org.cc.json.JSONObject;
 import org.cc.model.CCProcObject;
 import org.cc.stock.model.TA4JModel;
+import org.cc.stock.strategy.TA4JDCABBStrategy;
 import org.cc.stock.strategy.TA4JDCARateStrategy;
+import org.cc.stock.strategy.TA4JDCAStrategy;
+import org.ta4j.core.indicators.SMAIndicator;
+import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
 
 
 public class TA4JTrading {
@@ -18,14 +22,19 @@ public class TA4JTrading {
 		System.out.println("===== dp : "+dp);
 		String base = System.getProperty("$base", App.base);
 
-		String stockId = "0050";
+		String stockId = "00713";
 		try (CCProcObject proc = new CCProcObject(base, false)) {
             TA4JModel tm = new TA4JModel(proc, stockId);
             //TA4JModel tm = new TA4JModel(dp,stockId);
-			TA4JDCARateStrategy strategy = new TA4JDCARateStrategy(stockId,tm.series(),5,2500);
-            System.out.println("==============  always rate =======================");
+
+                                           //TA4JDCARateStrategy
+			TA4JDCAStrategy strategy = new TA4JDCAStrategy(stockId,tm.series(),5,10000);
 			strategy.evaluatetion();
-            strategy.show();
+			strategy.show();
+			System.out.println("------------------------------------");
+			//strategy = new TA4JDCAStrategy(stockId,tm.series(),22,10000);
+			//strategy.eval_scale();
+			//strategy.show();
 
 			
 

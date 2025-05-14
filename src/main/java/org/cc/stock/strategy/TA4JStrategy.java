@@ -16,6 +16,7 @@ public class TA4JStrategy {
     protected double shareavg = 0.0; // 平均股價
     protected double sharecash = 0; //持現
     protected double pvshareholding; // Present value of shareholding 持股現值
+    protected double lastPrice ;
     
     protected int term =0; // 每期
     protected int last; // 最後一筆
@@ -30,6 +31,26 @@ public class TA4JStrategy {
         this.high = new HighPriceIndicator(this.series);
         this.low = new LowPriceIndicator(this.series);
         this.close = new ClosePriceIndicator(this.series);
+        this.lastPrice = close.getValue(series.getBarCount()-1).doubleValue();
+    }
+
+    public void show() {
+        System.out.println("股票代號:" + stockId + ",預期成本:" + (term * installment));
+        System.out.println("總期數:" + term + ",持股:" + this.shareholding + ",均價:" + shareavg+",現價:"+lastPrice);
+        System.out.println("成本:" + total + ",現值:" + pvshareholding + ",價差:" + sharecash);
+        System.out.println("總獲利(%):" + pvshareholding / total * 100);
+        System.out.println("單期獲利(元）：" + (pvshareholding - total) / term + ",利率:" + calcInterestRate());
+    }
+
+    /**
+     * 利率 = ((本利和 / 本金)^(1 / 期數)) - 1
+     * 
+     * @return
+     */
+    public double calcInterestRate() {
+        double estimatedRate = Math.pow(pvshareholding / total, (1.0 / term)) - 1;
+        double estimatedRatePercentage = estimatedRate * 100;
+        return estimatedRatePercentage;
     }
 
 }

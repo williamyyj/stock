@@ -14,7 +14,6 @@ public class TA4JDCAStrategy extends TA4JStrategy {
     protected int period; // 周期 5週 20月 55 季
     private double sellRatio;
     private double buyRatio;
-    protected double lastPrice ;
     protected BiasIndicator bias;
 
 
@@ -51,12 +50,13 @@ public class TA4JDCAStrategy extends TA4JStrategy {
         __init_value();
         for (int i = 0; i <= last; i += period) {
             double sh = high.getValue(i).doubleValue();
-            double bv = bias.getValue(i).doubleValue();
             double num = Math.floor(installment  / sh);
+           
             shareholding += num;
             total += Math.floor(num * sh);
             pvshareholding = Math.floor(shareholding * close.getValue(i).doubleValue());
             shareavg = total / shareholding;
+            sharecash = close.getValue(i).doubleValue()-shareavg;
             // proc_sell_strategy(i);
             // proc_buy_strategy(i);
             term++;
@@ -67,6 +67,7 @@ public class TA4JDCAStrategy extends TA4JStrategy {
         jo.put("pvshareholding", pvshareholding);
         jo.put("shareavg", shareavg);
         jo.put("price", lastPrice);
+        jo.put("sharecash", sharecash);
         return jo;
     }
 
@@ -76,17 +77,20 @@ public class TA4JDCAStrategy extends TA4JStrategy {
         for (int i = 0; i <= last; i += period) {
             double sh = high.getValue(i).doubleValue();
             double bv = bias.getValue(i).doubleValue();
-            double scale = bv>0 ? 0.5 : 1.5;
-           // if (bv > 15) {
-           //     scale = 0.25;
-           // } else if (bv > 0 && bv <= 15) {
-           //     scale = 0.75;
-           // } else if (bv > -15 && bv <= 0) {
-           //     scale = 1.25;
-           // } else if (bv <= -15) {
-           //     scale = 1.75;
-           // }
-            //scale=1.0;
+            double scale = 1;
+            if (bv >= 15) {
+                scale = 0.25;  // 0.75
+            } else if (bv < 15 && bv >= 5) {
+                scale = 2; // 1
+            } else if (bv < 5 && bv >= -5 ) {
+            	scale = 4;
+           } else if (bv < -5 && bv <= -15) {
+                scale = 8;  // 1 
+           } else {
+                scale = 16; // 1.5 
+            }
+            scale = bv>0 ? 0.5: 2;
+            //scale=1.0;  標準定期定額
             double num = Math.floor(installment * scale / sh);
             shareholding += num;
             total += Math.floor(num * sh);
@@ -177,23 +181,6 @@ public class TA4JDCAStrategy extends TA4JStrategy {
         }
     }
 
-    public void show() {
-        System.out.println("股票代號:" + stockId + ",預期成本:" + (term * installment));
-        System.out.println("總期數:" + term + ",持股:" + this.shareholding + ",均價:" + shareavg+",現價:"+lastPrice);
-        System.out.println("成本:" + total + ",現值:" + pvshareholding + ",價差:" + sharecash);
-        System.out.println("總獲利(%):" + pvshareholding / total * 100);
-        System.out.println("平均單期(元）：" + (pvshareholding - total) / term + ",利率:" + calcInterestRate());
-    }
-
-    /**
-     * 利率 = ((本利和 / 本金)^(1 / 期數)) - 1
-     * 
-     * @return
-     */
-    public double calcInterestRate() {
-        double estimatedRate = Math.pow(pvshareholding / total, (1.0 / term)) - 1;
-        double estimatedRatePercentage = estimatedRate * 100;
-        return estimatedRatePercentage;
-    }
+  
 
 }

@@ -33,7 +33,7 @@ public class TaiCircleTest {
 			new SMACDColumns(sm);
 			new SKDColumns(sm);
 			for(int i=0; i<sm.data().size();i++) {
-				System.out.println(sm.data().get(i));
+				//System.out.println(sm.data().get(i));
 			}
 			SOutputColumns out = new SOutputColumns(new String[] {"sdate:date","so","sh","sl","sc","vol","k","d","kd:string"});
 			StringBuilder sb = out.toCSVString(sm.data());

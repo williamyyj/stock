@@ -1,5 +1,6 @@
 package org.cc.stock.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.cc.App;
@@ -9,6 +10,10 @@ import org.cc.model.CCProcUtils;
 import org.cc.stock.col.SBasicColumns;
 
 public class StockModel extends SBaseModel{
+	
+	//protected List<JSONObject> highList = new ArrayList<JSONObject>();
+	//protected List<JSONObject> lowList = new ArrayList<JSONObject>();
+	
 	
 	public StockModel(CCProcObject proc,String stockId) {
 		super(stockId);
@@ -66,11 +71,28 @@ public class StockModel extends SBaseModel{
 	public List<JSONObject> data(){
 		return data;
 	}
-	
+		
+	/**
+	 * 取得幾日前取盤
+	 * @param range
+	 * @param row
+	 * @return
+	 */
+	public double bsc(int range, JSONObject row) {
+		int idx = row.optInt("$i");
+		int bIdx = idx - range;
+		if (bIdx < 0) {
+			bIdx = 0;
+		}
+		JSONObject bData = data.get(bIdx);
+	    return bData.optDouble("sc");
+	}
 	
 	public double sc(int i) {
 		return data.get(i).optDouble("sc");
 	}
+	
+	
 
 	public double avg(int range, int eIdx) {
 		
@@ -92,6 +114,8 @@ public class StockModel extends SBaseModel{
 
 	}
 	
+	
+	
 	/**
 	 * (sc - avg(n))/ avg(n)*100 
 	 * @param range
@@ -101,7 +125,21 @@ public class StockModel extends SBaseModel{
 	public double bias(int range, int eIdx) {
 		double sc = sc (eIdx);
 		double avg = avg(range,eIdx);
-		return (sc - avg) / avg *100 ; 
+		return (sc - avg) / avg *100; 
+	}
+	
+	
+	public double highRatio(int range, int eIdx) {
+		int bIdx = (eIdx-range+1)>0 ? (eIdx-range+1) : 0;
+		int cycle = eIdx-bIdx+1;
+		double sc=0,sh=0,sl=999999.9;
+		for(int i=bIdx;i<=eIdx;i++) {
+			double sv = sc(i);
+			sc += sv;
+			sh = (sv>sh) ? sv : sh ;
+			sl = (sl>sv) ? sv : sl ;
+		}
+		return  sc(eIdx)/sh*100;
 	}
 	
 	/**
@@ -121,6 +159,13 @@ public class StockModel extends SBaseModel{
 		return eData.optDouble(varId)-bData.optDouble(varId);
 	}
 	
+	/**
+	 * 
+	 * @param range
+	 * @param varId ['svol', 'smem' , 'ssc']
+	 * @param eIdx
+	 * @return
+	 */
 	public double sum(String varId, int range, int eIdx) {
 		int bIdx = eIdx-range <0 ? 0 : eIdx-range ;
 		if (eIdx > data.size() || eIdx<0) {
@@ -131,7 +176,13 @@ public class StockModel extends SBaseModel{
 		JSONObject eData = data.get(eIdx);	
 		return (eIdx==0) ? bData.optDouble(varId) : eData.optDouble(varId)-bData.optDouble(varId);
 	}
-	
+	/**
+	 * 
+	 * @param varId ['svol', 'smem' , 'ssc']
+	 * @param range
+	 * @param eIdx
+	 * @return
+	 */
 	public double avg(String varId, int range, int eIdx) {
 		int bIdx = eIdx-range <0 ? 0 : eIdx-range ;
 		if (eIdx > data.size() || eIdx<0) {
@@ -173,6 +224,7 @@ public class StockModel extends SBaseModel{
 		JSONObject eData = data.get(eIdx);	
 		return eData.optDouble("ssc")-bData.optDouble("ssc");
 	}
+	
 	
 
 
@@ -231,6 +283,16 @@ public class StockModel extends SBaseModel{
 		double bv = bData.optDouble(id);
 		double ev = eData.optDouble(id);
 		return   (data.size()==1)? bv : (ev-bv)/ (data.size());
+	}
+	
+	public double acc(String varId, int range, int eIdx) {
+		if(eIdx-2*range <0 && eIdx<data.size()) {
+			return 0.0;
+		}
+		JSONObject ao = data.get(eIdx-2*range);
+		JSONObject a1 = data.get(eIdx-range);
+		JSONObject a2 = data.get(eIdx);
+		return  (ao.optDouble(varId)-2*a1.optDouble(varId)+a2.optDouble(varId)) ;
 	}
 
 

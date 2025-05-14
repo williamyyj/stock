@@ -34,7 +34,7 @@ public class FTWSEPush extends FStockBase implements BiFunction<CCProcObject, St
         JSONObject row = (JSONObject) CCProcUtils.exec(proc, "row@twse,chkDate");
         int num = row!=null ? row.optInt("num") : 0 ; 
         if(!rows.isEmpty() && rows.size()!=num){
-            System.out.println("===== add rows :" + rows.size());
+            System.out.println("===== " + rows.size());
             BiDaoBacthInsert bat = new BiDaoBacthInsert(proc, rows ,"twse","mstock" );
             int[] ret = bat.executeBatch();
         }
@@ -45,7 +45,6 @@ public class FTWSEPush extends FStockBase implements BiFunction<CCProcObject, St
         List<JSONObject> ret = new ArrayList<>();
         init_names(proc);
         for(JSONObject row : rows) {
-            //System.out.println(row);
             String stockId = row.optString("stockid");
             if (names.contains(stockId)){
                 ret.add(row);

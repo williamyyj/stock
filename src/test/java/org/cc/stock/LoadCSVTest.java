@@ -26,14 +26,6 @@ public class LoadCSVTest {
 		
 	}
 	
-	 static class otcConsumer implements Consumer<CsvRow> {
-		 
-		@Override
-		public void accept(CsvRow row) {
-			System.out.println(row);
-			
-		}
-		 
-	 }
+	
 	
 }

@@ -1,5 +1,13 @@
 package org.cc.stock;
 
+import java.util.List;
+
+import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction;
+import org.apache.commons.math3.fitting.PolynomialCurveFitter;
+import org.apache.commons.math3.fitting.WeightedObservedPoint;
+import org.apache.commons.math3.fitting.WeightedObservedPoints;
+
 /**
  * 牛頓插值多項式
  * @author 94017
@@ -104,11 +112,50 @@ public class FNetonMethod {
         return result;
     }
     
+	public static double polynomialCurveValue(double[] coeff, double xi) {
+		double ret = 0;
+		for (int i = 0; i < coeff.length; i++) {
+			ret += coeff[i] * Math.pow(xi, i);
+		}
+		return ret;
+	}
+    
+	public static double[]  PolynomialCurveFitter(double[] x, double[] y) {
+		
+		WeightedObservedPoints obs = new WeightedObservedPoints();
+		for (int i = 0; i < x.length; i++) {
+			obs.add(x[i], y[i]);
+		}
+		PolynomialCurveFitter fitter = PolynomialCurveFitter.create(2); // y = a[0]+a[1]x+a[2]x^2 , degree=2
+		List<WeightedObservedPoint> obs2List = obs.toList();
+		double[] coeff = fitter.fit(obs2List);
+		return coeff;
+	}
+    
     public static void main(String[] args) {
-        double[] x = {66.54,68.05287915727878, 68.66268957863939, 69.2725, 69.8823104213606, 70.4921208427212};
-        double[] y = {0,0.05, 0.32, 0.5, 0.68, 0.95};
-        double point = 66.55;
-        double result = lagrangeInterpolation(x, y, point);
-        System.out.println("f(" + point + ") = " + result);
+    	//===== rvHighStat :{"sa":92.44479194661658,"sd":6.803371964477431,"sh":100,"sl":64.76079346557759}
+    	//===== rvLowStat :{"sa":124.46115358251555,"sd":18.494507420861716,"sh":209.3264248704663,"sl":100}
+    	System.out.println((100+64)/2);
+        //double[] x = {100, 92.44479194661658 + 6.803371964477431 ,92.44479194661658 , 92.44479194661658-2*6.803371964477431, 64.76079346557759};
+    	// revert double[] x
+    	double[] x = {64.76079346557759, 92.44479194661658-2*6.803371964477431, 92.44479194661658 ,92.44479194661658 + 6.803371964477431, 100};
+    	        
+        double[] y = {0,25, 50, 75, 100};
+        double xi = 70;
+        
+        double[] coffe = PolynomialCurveFitter(x, y);
+        for(int i=65;i<=100;i++) {
+         	double v = polynomialCurveValue(coffe, i);
+        	System.out.println("f(" + i + ") = " + v);
+        }
+        
+        SplineInterpolator splineInterpolator = new SplineInterpolator();
+        PolynomialSplineFunction splineFunction = splineInterpolator.interpolate(x, y);
+
+        // 预测值
+        double yi = splineFunction.value(xi);
+        System.out.println("当 xi = " + xi + " 时，预测的 yi = " + yi);
+       yi =  lagrangeInterpolation(x, y, xi);
+        System.out.println("当 xi = " + xi + " 时，预测的 yi = " + yi);
     }
 }

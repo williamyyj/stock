@@ -45,6 +45,6 @@ public class SBaseModel {
 			row.put("mvol",tb.intColumn("mvol").get(i));
 			data.add(row);
 		}
-		System.out.println("====== loadFormCSV size : "+data.size());
+		System.out.println("====== load csv size : "+data.size());
 	}
 }

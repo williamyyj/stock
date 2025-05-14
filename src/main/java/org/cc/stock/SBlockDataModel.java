@@ -68,7 +68,7 @@ public class SBlockDataModel extends StockModel {
 		NumberFormat nf = new DecimalFormat("0.000");
 		String base = System.getProperty("$base", App.base);
 		try (CCProcObject proc = new CCProcObject(base, false)) {
-			SBlockDataModel bm = new SBlockDataModel(proc,"2330");
+			SBlockDataModel bm = new SBlockDataModel(proc,"00685L");
 			for(int i=0;i<bm.data.size();i++) {
 				JSONObject row = bm.data.get(i);
 				double sc = bm.sc(row);

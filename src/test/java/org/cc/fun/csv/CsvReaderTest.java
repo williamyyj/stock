@@ -17,11 +17,11 @@ public class CsvReaderTest {
 		String base = App.base;
 		try (CCProcObject proc = new CCProcObject(base, false)) {
 			JSONObject cfg = new CCConfig(proc.base(),"otc").params();
-			Path p = Path.of(cfg.optString("$targetPath"), "00888.csv");
+			//Path p = Path.of(cfg.optString("$targetPath"), "00888.csv");
 			proc.params().put("stockId", "00888");
-			proc.params().put("path", p);
-			List<JSONObject> rows = (List<JSONObject>) CCProcUtils.exec(proc, "csv.reader@otc,load");
-			rows.forEach(System.out::println);
+			//proc.params().put("path", p);
+			//List<JSONObject> rows = (List<JSONObject>) CCProcUtils.exec(proc, "csv.reader@otc,load");
+			//rows.forEach(System.out::println);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

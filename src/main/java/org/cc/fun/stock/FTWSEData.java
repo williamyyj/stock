@@ -52,11 +52,14 @@ public class FTWSEData implements BiFunction<CCProcObject, String, List<JSONObje
         String fileId = TextUtils.df("yyyyMMdd",proc.params().opt("sd"));
         System.out.println(fileId);
         File f = new File(tp,fileId+".json");
+        System.out.println("===== loading ... "+f);
         if(f.exists()){
             JSONObject jo = CCJSON.load(f);
             String pattern = cm.cfg().optJSONArray("fields").toString();
             if("OK".equals(jo.optString("stat"))){
+            	
                 for(String name : jo.keySet()){
+                	System.out.println("===== name:"+name);
                     if(name.contains("fields")){
                         Object ja = jo.opt(name);
                         if(pattern.equals(ja.toString())){
@@ -65,6 +68,15 @@ public class FTWSEData implements BiFunction<CCProcObject, String, List<JSONObje
                         }                   
                     }
                 }
+                // 20240703 後的資料
+                JSONArray  tbs = jo.optJSONArray("tables");
+				for (int i = 0; i < tbs.length(); i++) {
+					JSONObject tb = tbs.optJSONObject(i);
+					if (pattern.equals(tb.optJSONArray("fields").toString())) {
+						return tb.optJSONArray("data");
+					}
+				}
+                
             }
         }
         return new JSONArray();

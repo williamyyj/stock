@@ -12,12 +12,11 @@ import org.cc.data.CCData;
 import org.cc.data.CCHttpData;
 import org.cc.json.CCJSON;
 import org.cc.json.JSONObject;
-import org.cc.text.DateUtil;
 import org.cc.text.TextUtils;
-import org.mvel2.sh.text.TextUtil;
 
 public class PullOTCByStockId {
-	public final static String  url = "https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_info/st43_download.php?l=zh-tw&d=%s&stkno=%s&s=0,asc,0";
+	//public final static String  url = "https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_info/st43_download.php?l=zh-tw&d=%s&stkno=%s&s=0,asc,0";
+	public final static String  url ="https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=%s&date=%s&id=&response=json";
 	public final static Pattern p = Pattern.compile("[0-1]?\\d{1,2}[/][0-1]\\d[/][0-3]\\d");
 	private String stockId = "";
 	private File bf ;
@@ -47,9 +46,9 @@ public class PullOTCByStockId {
 		File csv = new File(bf,stockId+".csv");
 		LinkedHashSet<String> data = loadFromCsv(csv);
 		data.add("sdate,svol,mvol,so,sh,sl,sc,漲跌,筆數");
-		Calendar curr = Calendar.getInstance();
-		curr.setTime(ds);
+		Calendar curr = getBeginDate();
 		String lastUpdate = "";
+		
 		while (curr.getTime().before(de)) {
 			int year = curr.get(Calendar.YEAR);
 			int month = curr.get(Calendar.MONTH)+1;
@@ -97,20 +96,32 @@ public class PullOTCByStockId {
 			}
 		}
 	}
-	public void loadFromUrl() throws Exception {
+
+	private Calendar getBeginDate(){
 		Calendar curr = Calendar.getInstance();
 		curr.setTime(ds);
+		curr.set(Calendar.DATE,1);
+		curr.set(Calendar.HOUR,0);
+		curr.set(Calendar.MINUTE,0);
+		curr.set(Calendar.SECOND,0);
+		curr.set(Calendar.MILLISECOND,0);
+		return curr;
+	}
+	
+	public void loadFromUrl() throws Exception {
+		Calendar curr = getBeginDate();
 		while (curr.getTime().before(de)) {
 			int year = curr.get(Calendar.YEAR);
 			int month = curr.get(Calendar.MONTH)+1;
 			String ms = month<10 ? "0"+String.valueOf(month) : String.valueOf(month);
-			String ym = String.valueOf(year-1911) + "/" + ms;
-			String url = String.format(PullOTCByStockId.url, ym, stockId);
+			String ym = String.valueOf(year-1911) + "%2F" + ms+"%2F01";
+			String url = String.format(PullOTCByStockId.url, stockId, ym);
 			String fym = String.valueOf(year-1911)+ms;
-			File f = new File(bf,stockId+"_"+fym+".csv");
+			File f = new File(bf,stockId+"_"+fym+".json");
+			System.out.println(url);
 			if(!f.exists()) {
-				String content = CCHttpData.text(url, "BIG5");
-				CCData.saveText(f, content, "UTF-8");
+				//String content = CCHttpData.text(url, "BIG5");
+				//CCData.saveText(f, content, "UTF-8");
 			}
 			curr.add(Calendar.MONTH, 1);
 		}
@@ -118,11 +129,12 @@ public class PullOTCByStockId {
 	
 	public static void main(String[] args) throws Exception {
 		String base = "G:\\我的雲端硬碟\\mydata\\stock\\twotc";
-		String[] items = new String[]{"00888","00928","00772B","00687B","00751B"};
+		//String[] items = new String[]{"00888","00928","00772B","00687B","00751B","00773B","00719B"};
+		String[] items = new String[]{"00719B"};
 		for(String stockId:items){
 			PullOTCByStockId pull = new PullOTCByStockId(base,stockId);
 			pull.loadFromUrl();
-			pull.mergeData();
+			//pull.mergeData();
 		}
 	}
 	

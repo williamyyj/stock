@@ -20,7 +20,7 @@ import org.cc.util.CCDateUtils;
  *
  * @author william
  */
-public class FTWSEFromUrl implements BiFunction<CCProcObject, String, Boolean> {
+public class FStockFromUrl implements BiFunction<CCProcObject, String, Boolean> {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -50,19 +50,23 @@ public class FTWSEFromUrl implements BiFunction<CCProcObject, String, Boolean> {
     }
 
     public void proc_date(CCProcObject proc, CCActObject act, Date d) throws Exception {
+    	SimpleDateFormat dpdf = new SimpleDateFormat(act.cfg().optString("dpfmt","yyyyMMdd"));
         String tp = act.cfg().optString("$targetPath");
         JSONObject pp = proc.optJSONObject("$$");
         tp = tp.replace("$gstock", pp.optString("$gstock"));
-        File f = new File(tp, sdf.format(d) + ".json");
-        act.cfg().put("dp1", sdf.format(d));
-        //if (!(f.exists() && f.length()>4096)) {
-        if (!f.exists()) {
-            //System.out.println("===== fetch file ::: "+f);
+        String dt = act.cfg().optString("type","json");
+        File f = new File(tp, sdf.format(d) + "."+dt);
+        act.cfg().put("dp", dpdf.format(d));
+        if ((f.exists() && f.length()<512) || !f.exists() ) {
+        //if (!f.exists()  ) {
+        	System.out.println("===========================================");
+        	System.out.println(act.cfg().optString("$url"));
+        	System.out.println(act.cfg().toString(4));
             String url = (String) CCTemplate.eval(act.cfg().optString("$url"), act.cfg());
             System.out.println("===== fetch : "+url);
             String content = CCHttpData.text(url, "UTF-8");
             CCData.saveText(f,content, "UTF-8");
-            Thread.sleep(10000);
+            Thread.sleep(500);
         } else {
             System.out.println("===== skip "+ f);
         }
